@@ -1,0 +1,333 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" ng-app="notesApp">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style type="text/css">
+        DIV.stack-horiz-main {
+        }
+        DIV.stack-vert
+        {
+            border: solid thick red;
+        }
+        DIV.content
+        {
+            padding: 5px;
+            background-color: grey;
+            margin: 5px;
+
+        }
+        DIV.folder_navigation {
+            padding: 5px;
+            background-color: #4863A0; /*steel blue */
+            margin: 5px;
+        }
+
+        DIV.show_expand_folder_all {
+            padding: 5px;
+            background-color: #4863A0; /*steel blue */
+            margin: 5px;
+        }
+
+        DIV.folder_list {
+            border: solid thick blue;
+            overflow: hidden;
+        }
+
+        DIV.stack-vert-button {
+            padding: 5px;
+            background-color: grey;
+            margin: 5px;
+        }
+
+        DIV.folder_attibutes {
+            padding: 5px;
+            background-color: grey;
+            margin: 5px;
+        }
+
+        DIV.current_folder_content {
+            padding: 5px;
+            background-color: silver;
+            margin: 5px;
+        }
+
+        DIV.current_note {
+            padding: 5px;
+            background-color: grey;
+            margin: 5px;
+        }
+
+        DIV.stack-horiz-main DIV.stack-vert-button {
+            float: left;
+        }
+
+        DIV.stack-horiz-main DIV.folder_list {
+            float: left;
+        }
+
+        DIV.stack-horiz-main DIV.current_folder_content {
+            float: left;
+        }
+
+        DIV.stack-horiz-main DIV.current_note {
+            float: left;
+        }
+
+        DIV.banner_current_folder_content {
+            background-color: #727B7F;
+        }
+    </style>
+
+</head>
+<body ng-controller="MainCtrl as ctrl">
+
+    <div class="stack-horiz-main">
+        <div class="folder_navigation">
+            <span ng-repeat="folder_item in ctrl.folder_navigation">
+                <a href="" ng-click="ctrl.navigateTo(folder_item)"><span class="nav_folder_item" ng-bind="folder_item.label"></span></a>
+            </span>
+        </div>
+
+        <div class="stack-vert-button">
+            <div class="clear"><button ng-click="ctrl.clear()">Clear</button></div>
+            <div class="create_folder"><button ng-click="ctrl.createFolder()">Add folder</button></div>
+            <span ng-show="ctrl.show_folder_buttons">
+                <div class="folder_details">
+                    <span class="rename_folder"><button ng-click="ctrl.renameFolder()">Rename folder</button></span>
+                    <span class="folder_name" ng_show="ctrl.show_rename_folder">
+                        <input type="text" ng-model="ctrl.folder_name" ng-change="ctrl.folderNameCapture()" ng-keydown="ctrl.folderNameCaptureCR()" />
+                    </span>
+                </div>
+                <div class="add_note"><button ng-click="ctrl.addNoteToFolder()">Add note to selected folder</button></div>
+                <div class="add_folder"><button ng-click="ctrl.addFolderToFolder()">Add folder to selected folder</button></div>
+                <div class="folder_expand"><button ng-click="ctrl.expandFolderAll()">Expand folder</button></div>
+            </span>
+        </div>
+
+        <!-- Initial list of folders -->
+        <div class="folder_list">
+            <div class="folder_attibutes" ng-repeat="folder in ctrl.folders">
+                <!-- <input type="text" ng-model="folder.label"/> -->
+                <a href="" ng-click="ctrl.selectFolder(folder)"><span class="label">{{folder.label}}</span></a>
+                <span class="status" ng-bind="folder.done"></span>
+                <span class="button"><button ng-click="ctrl.parent_accesed_from_ng_reapeat_scope(folder)">Back</button></span>
+
+            </div>
+        </div>
+        <!-- End Initial list of folders -->
+
+        <div class="current_folder_content">
+            <div class="banner_current_folder_content" ng-bind="ctrl.currentFolder.label+' Content'">Contains: </div>
+
+            <div class="current_folder_list_of_folders">
+                <div ng-repeat="folder in ctrl.currentFolder.folders">
+                    <a href="" ng-click="ctrl.selectFolder(folder)"><span class="folder_label" ng-bind="folder.label"></span></a>
+                </div>
+            </div>
+
+            <div class="current_folder_list_of_notes">
+                <div ng-repeat="note in ctrl.currentFolder.notes">
+                    <a href="" ng-click="ctrl.displaySelectedNote(note)"><span class="note_title_only" ng-bind="note.note_title"></span></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="current_note" ng-show="ctrl.show_note_content">
+            <div class="folder_selected_note" ng-bind="ctrl.currentFolder.label+' Current Note'"></div>
+            <div class="note"><span class="note_title"><input type="text" ng-model="ctrl.currentNote.note_title"></span></div>
+            <div class="body"><span class="note_body"><textarea name="body_text" ng-model="ctrl.currentNote.note_body">Enter text</textarea></span></div>
+        </div>
+
+        <div class="stack-vert">
+            <div class="show_expand_folder_all" ng-show="ctrl.showExpandFolderAll">
+                <span ng-bind="ctrl.currentFolder.label"></span>
+                <ul>
+                    <li ng-repeat="folder in ctrl.currentFolder.folders" ng-include="'expand_folder_id'"></li>
+                </ul>
+            </div>
+        </div>
+
+        <script type="text/ng-template" id="expand_folder_id">
+            <div class="expand_folder">
+                <span ng-bind="folder.label"></span>
+                <ul ng-if="folder.folders">
+                    <li ng-repeat="folder in folder.folders" ng-include="'expand_folder_id'"></li>
+                </ul>
+            </div>
+        </script>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js">
+
+    </script>
+    <script type="text/javascript">
+        angular.module('notesApp', []).controller('MainCtrl', [function () {
+            var self = this;
+
+            self.folder_name = '';
+            self.show_folder_buttons = false;
+            self.show_rename_folder = false;
+            self.show_note_content = false;
+            self.showExpandFolderAll = false;
+
+            self.folder_navigation = [];
+
+            self.currentFolder = {};
+
+            self.currentNote = {};
+
+            self.folders = [{
+                id: 1,
+                label: 'First Folder',
+                done: false
+            }, {
+                id: 2,
+                label: 'Second Folder',
+                done: false
+            }, {
+                id: 3,
+                label: 'Third Folder',
+                done: true
+            }];
+
+            self.createFolder = function () {
+                self.folders.push({
+                    id: self.folders.length + 1,
+                    label: 'new folder',
+                    done: false
+                });
+                console.log('create folder id ' + self.folders.length);
+            };
+
+            self.clear = function () {
+                for (var i = 0; i < self.folders.length; i++) {
+                    console.log('Clearing ' + i);
+                    self.folders[i].label = 'cleared';
+                }
+            };
+
+            self.parent_accesed_from_ng_reapeat_scope = function (note) {
+                console.log('note.label ' + note.label + ' note.id ' + note.id);
+                note.label = 'back';
+            }
+
+            ////////////////////////// selecting a folder
+
+            self.selectFolder = function (folder) {
+                console.log('Selected folder: ' + folder.label);
+                self.currentFolder = folder;
+                self.show_folder_buttons = true;
+                self.currentNote = {};
+                self.show_note_content = false;
+                self.addFolderToNavigation(folder);
+            }
+            ////////////////////////// end selecting a folder
+
+            ////////////////////////// populate navigation
+            self.addFolderToNavigation = function (folder) {
+
+                var foundIt = false;
+                for (var i = 0; i < self.folder_navigation.length; i++) {
+                    if (self.folder_navigation[i] === folder) {
+                        console.log('nvigating to folder: ' + folder.label);
+                        foundIt = true;
+                        self.folder_navigation.splice(i + 1, self.folder_navigation.length - i);
+                        break;
+                    }
+                }
+                if( foundIt === false) {
+                    self.folder_navigation.push(folder);
+                }
+                return foundIt;
+            }
+
+            self.navigateTo = function (folderToGoTo) {
+                if (self.addFolderToNavigation(folderToGoTo) === true) {
+                    self.currentFolder = folderToGoTo;
+                }
+            }
+
+            ////////////////////////// end populate navigation
+
+            ////////////////////////// selecting and renaming a folder
+            self.renameFolder = function () {
+                self.show_rename_folder = true;
+                console.log('show renameFolder edit box');
+            };
+
+            self.folderNameCapture = function () {
+                //doesn't capture <CR>
+                console.log('Capturing <Enter>');
+                if (event.keyCode == 13) {
+                    self.show_rename_folder = false;
+                }
+            }
+
+            self.folderNameCaptureCR = function () {
+                console.log('Capturing <Enter> and renaming folder to: ' + self.folder_name);
+                if (event.keyCode == 13) {
+                    self.currentFolder.label = self.folder_name;
+                    self.show_rename_folder = false;
+                }
+            }
+            ////////////////////////// end of selecting and renaming a folder
+
+            ////////////////////////// selecting a folder and adding a note
+            self.addNoteToFolder = function () {
+
+                var count = 1;
+                if (self.currentFolder.notes) {
+                    count = self.currentFolder.notes.length + 1;
+                }
+                else {
+                    self.currentFolder.notes = [];
+                }
+
+                self.currentNote = { note_title: 'Enter a title ' + count, note_body: 'Enter a note' + count };
+                self.currentFolder.notes.push(self.currentNote);
+                self.show_note_content = true;
+            }
+
+            ////////////////////////// end of selecting a folder and adding a note
+
+            ////////////////////////// selecting a folder and adding a folder
+            self.addFolderToFolder = function () {
+
+                var count = 1;
+                if (self.currentFolder.folders) {
+                    count = self.currentFolder.folders.length + 1;
+                }
+                else {
+                    self.currentFolder.folders = [];
+                }
+
+                var newFolder = {
+                    id: count,
+                    label: 'New Folder' + count,
+                    done: false
+                };
+                self.currentFolder.folders.push(newFolder);
+            }
+
+            self.expandFolderAll = function() {
+                self.showExpandFolderAll = true;
+            }
+
+            ////////////////////////// end of selecting a folder and adding a note
+
+
+            ////////////////////////// end of display a selected note from aselected folder
+            self.displaySelectedNote = function (note) {
+                self.show_note_content = true;
+                console.log('display note: ' + note.note_title);
+                self.currentNote = note;
+            }
+
+            ////////////////////////// end of display a selected note from aselected folder
+
+        }]);
+    </script>
+</body>
+</html>

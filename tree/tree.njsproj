@@ -36,10 +36,15 @@
     <Content Include="public\readme.txt" />
     <Content Include="public\sample_tree\tree.css" />
     <Content Include="public\sample_tree\tree.html" />
+    <Content Include="public\simple_ui\mockup.html" />
+    <Content Include="public\simple_ui\test_template.html" />
+    <Content Include="public\simple_ui\with_navigation - Copy.html" />
+    <Content Include="public\simple_ui\with_navigation.html" />
     <Content Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="public\" />
+    <Folder Include="public\simple_ui\" />
     <Folder Include="public\sample_tree\" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->

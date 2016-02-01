@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style type="text/css">
+        div.main_window {
+            width: 960px;
+			margin: 0 auto;
+        }
+
+        .nav {
+            background-color: #efefef;
+			padding: 10px;
+			margin: 10px;
+        }
+        .folder_action {
+				background-color: #efefef;
+				width: 150px;
+				float: left;
+				margin: 10px;
+        }
+        .folder_initial_list {
+				background-color: #efefef;
+				width: 200px;
+				float: left;
+				margin: 10px;
+        }
+        .action {
+
+        }
+        .parent_folder {
+            background-color: #58857a;
+
+        }
+        .selected_folder {
+				background-color: #efefef;
+				width: 200px;
+				float: left;
+				margin: 10px;
+        }
+        .selected_note {
+				background-color: #efefef;
+				width: 300px;
+				float: left;
+				margin: 10px;
+
+        }
+        .note_title {
+
+        }
+        .note_body {
+
+        }
+
+        .expanded_tree {
+            clear:left;
+        }
+        .folder_in_tree {
+            background-color: #808080;
+        }
+        .note_in_folder_tree {
+            background-color: #58857a
+        }
+
+    </style>
+</head>
+<body>
+    <div class="main_window">
+        <div class="nav">
+            <a href="">initial folder1</a>
+            <a href="">folder2 in 1</a>
+            <a href="">folder1 in 2</a>
+            <a href="">folder4 in 1</a>
+            <a href="">folder5 in 1</a>
+            <a href="">folder6 in 1</a>
+            <a href="">folder7 in 1</a>
+        </div>
+        <div class="main_content">
+            <div class="folder_action">
+                <div class="action"><button>add folder</button></div>
+                <div class="action"><button>delete folder</button></div>
+                <div class="action"><button>add note to folder</button></div>
+                <div class="action"><button>show notye folder</button></div>
+                <div class="action"><button>exapnd folder</button></div>
+            </div>
+            <div class="folder_initial_list">
+                <div class="parent_folder"><a href="">initial folder1</a></div>
+                <div class="parent_folder"><a href="">initial folder2</a></div>
+                <div class="parent_folder"><a href="">initial folder3</a></div>
+            </div>
+            <div class="selected_folder">
+                <div class="slected_folder_name">
+                    folder1 in 2
+                </div>
+                <div class="child_folder">
+                    <div class="child_folder_item"><a href="">child folder1</a></div>
+                    <div class="child_folder_item"><a href="">child folder2</a></div>
+                    <div class="child_folder_item"><a href="">child folder3</a></div>
+                    <div class="child_folder_item"><a href="">child folder4</a></div>
+                </div>
+                <div class="child_note">
+                    <div class="child_note_item"><a href="">child note</a></div>
+                    <div class="child_note_item"><a href="">child note</a></div>
+                    <div class="child_note_item"><a href="">child note</a></div>
+                    <div class="child_note_item"><a href="">child note</a></div>
+                    <div class="child_note_item"><a href="">child note</a></div>
+                </div>
+            </div>
+            <div class="selected_note">
+                <div class="note_title">
+                    <input type="text" style="height:100%; width:100%; box-sizing:border-box" value="this a note title" />
+                </div>
+                <div class="note_body">
+                    <textarea style="height:100%; width:100%; box-sizing:border-box">
+                        this is
+                        the text are of the note
+                    </textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="expanded_tree">
+            <div class="expanded_folder_name">
+                expanded_folder_name
+            </div>
+            <div class="expanded_folder_tree">
+                <ul>
+                    <li>
+                        <span class="folder_in_tree">folder1</span>
+                            <ul>
+                                <li>
+                                    <span class="folder_in_tree">folder 11</span>
+                                    <ul>
+                                        <li><span class="note_in_folder_tree">note 1</span></li>
+                                    </ul>
+                                </li>
+                                <li><span class="folder_in_tree"> folder 12</span>
+     
+                                    <ul>
+                                        <li><span class="folder_in_tree">folder 121</span></li>
+                                        <li><span class="folder_in_tree">folder 1221</span></li>
+                                        <li ><span class="folder_in_tree">folder 123</span></li>
+                                        <li><span class="note_in_folder_tree">note 1</span></li>
+                                        <li><span class="note_in_folder_tree">note 1</span></li>
+                                        <li><span class="note_in_folder_tree">note 1</span></li>
+                                    </ul>
+                                </li>
+                            </ul>
+</li>
+                    <li><span class="folder_in_tree">folder2</span></li>
+                    <li><span class="folder_in_tree">folder3</span></li>
+                    <li><span class="folder_in_tree">folder4</span></li>
+                    <li><span class="folder_in_tree">folder5</span></li>
+                    <li><span class="folder_in_tree">folder6</span></li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
