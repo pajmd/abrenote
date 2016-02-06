@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" ng-app="notesApp">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body ng-controller="MainCtrl as ctrl">
+
+    <div ng-repeat="item in ctrl.getUpto()">
+        <a href="" ng-click="ctrl.setIndex(item.idx)"> <div ng-bind="item.val"></div></a>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js"></script>
+
+    <script type="text/javascript">
+    angular.module('notesApp', []).controller('MainCtrl', [function () {
+        var self = this;
+
+        self.items = [
+            { idx: 0, val: '0000' },
+            { idx: 1, val: 'aaaa' },
+            { idx: 2, val: 'bbbb'},
+            { idx: 3, val: 'xywz'},
+            { idx: 4, val: 'dddd'},
+            { idx: 5, val: 'eeee' }
+        ];
+
+        self.index = self.items.length - 1
+        self.toggle = true;
+
+        self.setIndex = function (idx) {
+            if (self.toggle === true) {
+                self.index = idx;
+                self.toggle = false;
+            }
+            else {
+                self.index = self.items.length - 1;
+                self.toggle = true;
+            }
+        }
+
+        self.getUpto = function (idx) {
+            console.log('idx=' + self.index);
+            var res = [];
+            for (var i = 0; i <= self.index; i++) {
+                res.push(self.items[i]);
+            }
+
+            return res;
+        }
+    }
+    ]);
+
+    </script>
+
+        </body>
+</html>

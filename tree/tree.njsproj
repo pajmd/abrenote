@@ -36,6 +36,8 @@
     <Content Include="public\readme.txt" />
     <Content Include="public\sample_tree\tree.css" />
     <Content Include="public\sample_tree\tree.html" />
+    <Content Include="public\simple_ui\toggle_class.html" />
+    <Content Include="public\simple_ui\ngrepeat.html" />
     <Content Include="public\simple_ui\mockup.html" />
     <Content Include="public\simple_ui\test_template.html" />
     <Content Include="public\simple_ui\with_navigation - Copy.html" />

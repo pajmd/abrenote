@@ -68,6 +68,10 @@
         .note_in_folder_tree {
             background-color: #58857a;
         }
+
+        .collapse {
+            display: none !important;
+        }
     </style>
 
 </head>
@@ -135,10 +139,12 @@
 
         <script type="text/ng-template" id="expand_folder_id">
             <div class="expanded_folder_tree">
+                <a href="" ng-click="ctrl.collapseFolder(folder)">F</a>
                 <span class="folder_in_tree" ng-bind="folder.label"></span>
                 <ul ng-if="folder.folders">
-                    <li ng-repeat="folder in folder.folders" ng-include="'expand_folder_id'"></li>
-                    <li ng-if="folder.notes" ng-repeat="note in folder.notes"><span class="note_in_folder_tree" ng-bind="note.note_title" /></li>
+                    <!--<li ng-repeat="folder in folder.folders" ng-include="'expand_folder_id'"></li>-->
+                    <li ng-repeat="folder in ctrl.getFoldersToExpand(folder.folders)" ng-class="ctrl.getFolderClass(folder.collapse)" ng-include="'expand_folder_id'"></li>
+                    <li ng-if="folder.notes" ng-repeat="note in folder.notes" ng-class="ctrl.getNoteClass(note, folder)"><span class="note_in_folder_tree" ng-bind="note.note_title" /></li>
                 </ul>
             </div>
         </script>
@@ -147,10 +153,12 @@
 
             <div class="show_expand_folder_all" ng-show="ctrl.showExpandFolderAll">
                 <div ng-if="ctrl.isCurrentFolderSet()">
+                    <a href="" ng-click="ctrl.collapseFolder(ctrl.currentFolder)">F</a>
                     <div class="expanded_folder_name" ng-bind="ctrl.currentFolder.label"></div>
                     <ul>
-                        <li ng-repeat="folder in ctrl.currentFolder.folders" ng-include="'expand_folder_id'"></li>
-                        <li  ng-if="ctrl.currentFolder.notes" ng-repeat="note in ctrl.currentFolder.notes"><span class="note_in_folder_tree" ng-bind="note.note_title"/></li>
+                        <!--<li ng-repeat="folder in ctrl.currentFolder.folders" ng-include="'expand_folder_id'"></li>-->
+                        <li ng-repeat="folder in ctrl.getFoldersToExpand(ctrl.currentFolder.folders)" ng-class="ctrl.getFolderClass(folder.collapse)" ng-include="'expand_folder_id'"></li>
+                        <li ng-if="ctrl.currentFolder.notes" ng-repeat="note in ctrl.currentFolder.notes" ng-class="ctrl.getNoteClass(note, ctrl.currentFolder)"><span class="note_in_folder_tree" ng-bind="note.note_title" /></li>
                     </ul>
                 </div>
             </div>
@@ -186,15 +194,8 @@
             self.folders = [{
                 id: 1,
                 label: 'First Folder',
-                done: false
-            }, {
-                id: 2,
-                label: 'Second Folder',
-                done: false
-            }, {
-                id: 3,
-                label: 'Third Folder',
-                done: true
+                done: false,
+                collapse : false
             }];
 
             self.createFolder = function () {
@@ -224,7 +225,7 @@
                 if (self.currentFolder.folders) {
                     rc = true;
                 }
-                console.log('Is current folder set: ' + rc);
+                console.log('Is current folder set: ' + rc + ' and if is: ' + self.currentFolder.label);
                 return rc;
             }
             ////////////////////////// end current folder
@@ -302,7 +303,11 @@
                     self.currentFolder.notes = [];
                 }
 
-                self.currentNote = { note_title: 'Enter a title ' + count, note_body: 'Enter a note' + count };
+                self.currentNote = {
+                    note_title: 'Enter a title ' + count,
+                    note_body: 'Enter a note' + count,
+                    collapse: false
+                };
                 self.currentFolder.notes.push(self.currentNote);
                 self.show_note_content = true;
             }
@@ -323,7 +328,8 @@
                 var newFolder = {
                     id: count,
                     label: 'New Folder' + count,
-                    done: false
+                    done: false,
+                    collapse : false
                 };
                 self.currentFolder.folders.push(newFolder);
             }
@@ -331,6 +337,48 @@
             self.expandFolderAll = function () {
                 self.showExpandFolderAll = true;
             }
+
+            self.getFolderClass = function (folder_collapse_state) {
+                // if folder_collapse_state is true the collpase class is active
+                return { collapse: folder_collapse_state };
+            }
+
+            self.getNoteClass = function (note, folder) {
+                console.log('For note ' + note.note_title + ' in folder ' + folder.label + ' collapse state is ' + folder.collapse);
+                return { collapse: note.collapse };
+            }
+
+            self.collapseFolder = function (folder) {
+                //                folder.collapse = (folder.collapse === false) ? true : false;
+                console.log('collapsing/expanding folder ' + folder.label);
+
+                if (folder.folders != undefined) {
+                    for (var i = 0; i < folder.folders.length; i++) {
+                        folder.folders[i].collapse = (folder.folders[i].collapse === false) ? true : false;
+                    }
+                }
+                if (folder.notes != undefined) {
+                    for (var i = 0; i < folder.notes.length; i++) {
+                        folder.notes[i].collapse = (folder.notes[i].collapse === false) ? true : false;
+                    }
+                }
+            }
+
+            self.getFoldersToExpand = function (folders) {
+                return folders;
+                var foldersToShow = [];
+                if (folders != undefined) {
+                    for (var i = 0; i < folders.length; i++) {
+                        foldersToShow.push(folders[i]);
+                        if (folders[i].collapse === true) {
+                            break;
+                        }
+                    }
+                }
+                return foldersToShow;
+            }
+
+
 
             ////////////////////////// end of selecting a folder and adding a note
 

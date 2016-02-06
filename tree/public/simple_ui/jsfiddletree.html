@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <div ng-app="app" ng-controller='AppCtrl'>
+        <script type="text/ng-template" id="categoryTree">
+            {{ category.title }}
+            <ul ng-if="category.categories">
+                <li ng-repeat="category in category.categories" ng-include="'categoryTree'">
+                </li>
+            </ul>
+        </script>
+        <ul>
+            <li ng-repeat="category in categories" ng-include="'categoryTree'"></li>
+        </ul>
+    </div>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.1/angular.js">
+    </script>
+
+    <script type="text/javascript">
+        var app = angular.module('app', []);
+
+    app.controller('AppCtrl', function ($scope) {
+
+
+
+        $scope.categories = [
+          {
+              title: 'Computers',
+              categories: [
+                {
+                    title: 'Laptops',
+                    categories: [
+                      {
+                          title: 'Ultrabooks'
+                      },
+                      {
+                          title: 'Macbooks'
+                      }
+                    ]
+                },
+
+                {
+                    title: 'Desktops'
+                },
+
+                {
+                    title: 'Tablets',
+                    categories: [
+                      {
+                          title: 'Apple'
+                      },
+                      {
+                          title: 'Android'
+                      }
+                    ]
+                }
+              ]
+          },
+
+          {
+              title: 'Printers'
+          }
+
+        ];
+
+    });
+    </script>
+
+
+
+
+
+
+</body>
+</html>
