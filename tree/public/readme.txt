@@ -13,3 +13,6 @@ I want to add buttons on the top to:
 - create a new folder based an already select folder
 - create a new note based on the folder selected (maybe this button should be on the top on the 
 note titles pane)
+
+https://docs.mongodb.org/manual/tutorial/model-tree-structures/
+http://stackoverflow.com/questions/12888103/mongoose-js-how-to-implement-tree-structure-via-population
